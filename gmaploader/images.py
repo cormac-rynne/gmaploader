@@ -29,6 +29,8 @@ class ImageSuper(Request):
             Saves image either to a folder (saves original filename) or to an entire filepath
         delete()
             Delete image using img_filepath, if exists
+        create_folder()
+            Creates folders needed for desired filepath
 
     """
     def __init__(self, lat, lon, zoom, height, width, folder):
@@ -60,6 +62,18 @@ class ImageSuper(Request):
             if self.width > SYSTEM_CONFIG.get('dimension_threshold'):
                 raise DimensionTooBig(self.width)
 
+    @staticmethod
+    def create_folders(filepath):
+        """Creates folders needed for desired filepath
+
+        Args:
+            filepath (str): File full filepath
+
+        Returns
+            None
+        """
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
     def save(self, filepath=None, folder=None):
         """Save image to specific filepath or folder
 
@@ -82,7 +96,7 @@ class ImageSuper(Request):
             img_filepath.replace(old_folder, folder)
 
         # Save
-        os.makedirs(os.path.dirname(img_filepath), exist_ok=True)
+        self.create_folders(img_filepath)
         self.img.save(img_filepath)
         logger.info(f'File saved {img_filepath}')
 
@@ -278,6 +292,7 @@ class ImageLoader(ImageSuper):
         )
 
         # Download image
+        self.create_folders(self.img_filepath)
         urllib.request.urlretrieve(url=url, filename=self.img_filepath)
         logger.debug(f'Image downloaded: {self.img_filepath}')
 
