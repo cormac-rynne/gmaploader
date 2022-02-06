@@ -56,15 +56,15 @@ SYSTEM_CONFIG.set(
     output_folder=OUTPUT_FOLDER,
     latlon_round=8,  # Rounding threshold for lat-lons
     dimension_threshold=3000,  # largest width or height allowed in a single image
-    gmap_key=os.environ['GMAP_KEY'],  # GCP mapping services key
+    gmap_key=os.environ.get('GMAP_KEY'),  # GCP mapping services key
     logging_stdout_level=logging.DEBUG,  # Threshold for stdout
     logging_stdout=False,  # stdout on or off
     logging_files=False,  # Output logs to files or not
 )
 
 
-def logger(name, stdout_level=SYSTEM_CONFIG.get('logging_stdout_level'),
-           file_output=SYSTEM_CONFIG.get('logging_files'),
+def logger(name, file_output=SYSTEM_CONFIG.get('logging_files'),
+           stdout_level=SYSTEM_CONFIG.get('logging_stdout_level'),
            stdout=SYSTEM_CONFIG.get('logging_stdout')):
     """
     Creates logger object using default file and stdout settings. File outputs split into
@@ -72,8 +72,9 @@ def logger(name, stdout_level=SYSTEM_CONFIG.get('logging_stdout_level'),
 
     Args:
         name (str): Logger name
-        stdout_level (logging.object): Threshold for stdout
         file_output (bool): Output logs to file for records
+        stdout_level (logging.object): Threshold for stdout
+        stdout (bool): Output logs to stdout
 
     Returns:
 

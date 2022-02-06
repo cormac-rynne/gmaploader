@@ -4,6 +4,7 @@ tmp/
 gmaploader_dev.ipynb
 logger.py
 .idea/
+tests/temp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

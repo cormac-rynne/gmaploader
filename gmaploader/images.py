@@ -279,6 +279,10 @@ class ImageLoader(ImageSuper):
 
         """
 
+        if os.environ.get('GMAP_KEY') is None:
+            print("No API key provided. Use os.environ['GMAP_KEY'] = 'KEYHERE'")
+            return
+
         # build url
         url = SYSTEM_CONFIG.get('url_template')
         url = url.format(
@@ -288,7 +292,7 @@ class ImageLoader(ImageSuper):
             width=self.width,
             height=self.height,
             map_type=self.map_type,
-            api_key=SYSTEM_CONFIG.get('gmap_key')
+            api_key=os.environ.get('GMAP_KEY')
         )
 
         # Download image
@@ -307,6 +311,11 @@ class ImageLoader(ImageSuper):
         """
         if not os.path.exists(self.img_filepath):
             self.download()
-        logger.debug(f'Image loaded:{self.img_filepath}')
-        self.img = Image.open(self.img_filepath)
-        return self.img
+
+        if os.path.exists(self.img_filepath):
+            self.img = Image.open(self.img_filepath)
+            logger.debug(f'Image loaded:{self.img_filepath}')
+            return self.img
+        else:
+            print(f'{self.img_filepath} doesnt exist')
+            return
